@@ -5,7 +5,8 @@ from threading import Lock
 from utils import load_config, change_x
 from gaze_estimation import GazeEstimator
 import numpy as np
-
+from PIL import Image
+import os
 
 class Run:
 
@@ -118,7 +119,32 @@ def inference(file_path, width, height):
             ret['sight_spot'] = {"x": spot[0], "y": spot[1]}
         return ret
 
+def video_inference(video_path):
+    image_dir = "images"
+    cmd = "rm -rf" + image_dir
+    os.system(cmd)
+    cmd = "mkdir" + image_dir
+    os.system(cmd)
+    cmd = "ffmpeg -i %s -vf fps=1 %s/out%%d.jpg" % (video_path,image_dir)
+    os.system(cmd)
+
+    files = os.listdir(image_dir)
+    ans = 0
+    for file in files:
+        image_path = image_dir + "/" + file
+        img_pillow = Image.open(image_path)
+        img_width = img_pillow.width # 图片宽度
+        img_height = img_pillow.height # 图片高度
+        print(inference(image_path, img_width, img_height))
+
 
 if __name__ == '__main__':
-    print(inference("test_images/1.jpeg", 525, 279))
+    # image_path = "test_images/2.jpg"
+    # # 使用pillow读取图片，获取图片的宽和高
+    # img_pillow = Image.open(image_path)
+    # img_width = img_pillow.width # 图片宽度
+    # img_height = img_pillow.height # 图片高度
+    # print(inference("test_images/2.jpg", img_width, img_height))
+
+    video_inference("./input.mp4")
 	# demo()

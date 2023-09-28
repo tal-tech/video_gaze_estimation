@@ -1,2 +1,5 @@
-**gaze estimation V1.0**
-视线估计
+**video gaze estimation V1.0**
+视频视线估计
+
+pip install -r requirements.txt
+python demo.py
